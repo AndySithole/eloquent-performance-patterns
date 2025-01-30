@@ -1,14 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -42,13 +44,17 @@ class User extends Authenticatable
         return $this->hasMany(Login::class);
     }
 
-    public function scopeWithLastLoginAt($query)
+    public function lastLogin()
     {
-        $query->addSelect(['last_login_at' => Login::select('created_at')
-                ->whereColumn('user_id', 'users.id')
-                ->latest()
-                ->take(1)
-            ])
-            ->withCasts(['last_login_at' => 'datetime']);
+        return $this->hasOne(Login::class)->latest();
+    }
+
+    public function scopeWithLastLogin($query)
+    {
+        $query->addSelect(['last_login_id' => Login::select('created_at')
+            ->whereColumn('user_id', 'users.id')
+            ->latest()
+            ->take(1)
+            ])->with('lastLogin');
     }
 }

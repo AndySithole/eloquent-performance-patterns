@@ -1,13 +1,17 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Login;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Login::class, function (Faker $faker) {
-    return [
-        'ip_address' => $faker->ipv4,
-        'created_at' => $faker->dateTimeThisDecade('now'),
-    ];
-});
+class LoginFactory extends Factory
+{
+
+    public function definition()
+    {
+        return [
+            'ip_address' => $this->faker->ipv4,
+            'created_at' => $this->faker->dateTimeThisDecade('now'),
+        ];
+    }
+}
